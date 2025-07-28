@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1031 - Power Dashboard</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+  <style>
+    :root {
+      --primary: #a020f0;
+      --bg: #000;
+      --text: #fff;
+      --accent: #444;
+    }
+    * {
+      transition: all 0.3s ease;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      background-image: url('https://anmol103.github.io/1031/black-rose.png');
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 1rem 1rem;
+    }
+    header h1 {
+      font-size: 4rem;
+      font-weight: bold;
+      color: var(--primary);
+      text-shadow: 2px 2px 4px black;
+    }
+    .quote {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .controls {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      padding: 10px;
+      border-radius: 10px;
+      z-index: 100;
+    }
+    .controls button {
+      margin: 5px;
+      padding: 8px 12px;
+      border: none;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .quicklinks {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 2rem auto;
+      max-width: 1000px;
+    }
+    .quicklinks a {
+      background: var(--accent);
+      color: white;
+      padding: 10px;
+      margin: 5px;
+      text-decoration: none;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+    }
+    .quicklinks a img {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+    }
+    .widget {
+      background: rgba(255, 255, 255, 0.05);
+      margin: 1rem auto;
+      padding: 1rem;
+      border-radius: 10px;
+      max-width: 700px;
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: var(--primary);
+      color: white;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .game-frame, .youtube-player {
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 1rem;
+    }
+    .blurred {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>1031</h1>
+    <div class="quote">"Never give up, because great things take time."</div>
+  </header>
+
+  <div class="quicklinks" id="quicklinks"></div>
+
+  <div class="controls">
+    <button onclick="addLink()">➕ Add Link</button>
+    <button onclick="changeBG()">🖼️ Change BG</button>
+    <button onclick="toggleTheme()">🌓 Theme</button>
+    <button onclick="addNote()">📝 Add Note</button>
+    <button onclick="addGame()">🎮 Game</button>
+    <button onclick="addNews()">🗞️ News</button>
+    <button onclick="addYoutube()">▶️ YouTube</button>
+    <button onclick="addQuote()">💬 Quote</button>
+  </div>
+
+  <div id="widgets"></div>
+
+  <script>
+    let links = [
+      { icon: 'https://chat.openai.com/favicon.ico', url: 'https://chat.openai.com', name: 'ChatGPT' },
+      { icon: 'https://www.google.com/favicon.ico', url: 'https://google.com', name: 'Google' },
+      { icon: 'https://ncert.nic.in/images/favicon.ico', url: 'https://ncert.nic.in', name: 'NCERT' }
+    ];
+
+    function loadLinks() {
+      const box = document.getElementById("quicklinks");
+      box.innerHTML = '';
+      links.forEach(link => {
+        const a = document.createElement("a");
+        a.href = link.url;
+        a.target = "_blank";
+        a.innerHTML = `<img src="${link.icon}" alt="icon"> ${link.name}`;
+        box.appendChild(a);
+      });
+    }
+
+    function addLink() {
+      const icon = prompt("Icon URL");
+      const url = prompt("Website URL");
+      const name = prompt("Name");
+      if (icon && url && name) {
+        links.push({ icon, url, name });
+        loadLinks();
+      }
+    }
+
+    function changeBG() {
+      const bg = prompt("Enter image URL:");
+      if (bg) document.body.style.backgroundImage = `url('${bg}')`;
+    }
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const isDark = root.style.getPropertyValue('--bg') === '#000';
+      root.style.setProperty('--bg', isDark ? '#fff' : '#000');
+      root.style.setProperty('--text', isDark ? '#000' : '#fff');
+    }
+
+    function addNote() {
+      const content = prompt("Write your note:");
+      if (content) {
+        const div = document.createElement("div");
+        div.className = "widget";
+        div.textContent = content;
+        document.getElementById("widgets").appendChild(div);
+      }
+    }
+
+    function addGame() {
+      const div = document.createElement("div");
+      div.className = "widget";
+      div.innerHTML = '<iframe src="https://play2048.co" class="game-frame"></iframe>';
+      document.getElementById("widgets").appendChild(div);
+    }
+
+    function addNews() {
+      const div = document.createElement("div");
+      div.className = "widget";
+      div.innerHTML = '<iframe src="https://www.bbc.com/news" class="game-frame"></iframe>';
+      document.getElementById("widgets").appendChild(div);
+    }
+
+    function addYoutube() {
+      const url = prompt("Enter YouTube Playlist URL:");
+      if (url) {
+        const id = url.split("list=")[1];
+        const div = document.createElement("div");
+        div.className = "widget";
+        div.innerHTML = `<iframe class="youtube-player" src="https://www.youtube.com/embed/videoseries?list=${id}" allowfullscreen></iframe>`;
+        document.getElementById("widgets").appendChild(div);
+      }
+    }
+
+    function addQuote() {
+      fetch('https://api.quotable.io/random')
+        .then(res => res.json())
+        .then(data => {
+          const div = document.createElement("div");
+          div.className = "widget";
+          div.innerHTML = `<strong>${data.content}</strong><br>— ${data.author}`;
+          document.getElementById("widgets").appendChild(div);
+        });
+    }
+
+    document.addEventListener("keydown", function(e) {
+      if (e.ctrlKey && e.key === "b") {
+        document.body.classList.toggle("blurred");
+      }
+    });
+
+    loadLinks();
+  </script>
+</body>
+</html>
